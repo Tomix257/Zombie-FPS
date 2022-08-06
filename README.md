@@ -1,5 +1,12 @@
-# Zombie-FPS
-FPS demo i made using Python as programming language and Ursina as my framework
+# About (Zombie-FPS)
+* 3D FPS demo i made using Python as programming language and Ursina as my framework
+* It took me just about few days to get this demo done 
+## Status : 
+* Currently I think there are no bugs but there are things that need to be added 
+* There is no way to die as player 
+* There are no particles which I would like to implement in future
+* Pistol model needs to get texture fixed 
+* Maybe fix some performance 
 
 # What you need to run this ?
 * Python & Ursina Engine
