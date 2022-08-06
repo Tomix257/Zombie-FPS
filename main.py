@@ -3,7 +3,7 @@ from ursina.prefabs.first_person_controller import FirstPersonController
 from ursina.shaders import lit_with_shadows_shader
 
 # SETTINGS
-window.title = 'new zombie game'
+window.title = 'zombie game'
 app = Ursina()
 
 window.fullscreen = True
