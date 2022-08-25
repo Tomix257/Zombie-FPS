@@ -1,18 +1,16 @@
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
-from ursina.shaders import lit_with_shadows_shader
+from sun import SunLight
+
 
 # SETTINGS
+window.show_ursina_splash = True
 window.title = 'zombie game'
 app = Ursina()
 
 window.fullscreen = True
-window.exit_button.enabled = False
-window.cog_button.enabled = False
-# MENU
-
-# GRAPHICS
-Entity.default_shader = lit_with_shadows_shader
+window.exit_button.disable()
+window.cog_button.disable()
 
 # MAP
 ground = Entity(model='plane', collider='box', scale=128, texture='grass', texture_scale=(4,4))
@@ -25,7 +23,7 @@ wall_4=Entity(model="cube", collider="box", position=(-15, 0, 10), scale=(1,5,20
     texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0))
 
 # PLAYER
-player = FirstPersonController(model='cube',collider="cube", z=-10, color=color.light_gray, origin_y=-.5, speed=8)
+player = FirstPersonController(model='cube',collider="mesh", z=-10, color=color.light_gray, origin_y=-.5, speed=8)
 player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
 
 # GUN
@@ -41,8 +39,7 @@ for i in range(26):
         z=random.uniform(-8,8) + 18,
         collider='box',
         scale_y = random.uniform(2,3),
-        color=color.hsv(0, 0, random.uniform(.9, 1))
-        )
+        color=color.hsv(0, 0, random.uniform(.9, 1)))
 
 def update():
     if held_keys['left mouse']:
@@ -56,7 +53,7 @@ def shoot():
         from ursina.prefabs.ursfx import ursfx
         ursfx([(0.0, 0.0), (0.1, 0.9), (0.15, 0.75), (0.3, 0.14), (0.6, 0.0)], wave = 'assets/sounds/gun.wav', )
         invoke(gun.muzzle_flash.disable, delay=.05)
-        invoke(setattr, gun, 'on_cooldown', False, delay=.30)
+        invoke(setattr, gun, 'on_cooldown', False, delay=.25)
         if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
             mouse.hovered_entity.hp -= 10
             mouse.hovered_entity.blink(color.red)
@@ -100,7 +97,7 @@ class Enemy(Entity):
         self.health_bar.alpha = 1
 
 # Enemy()
-enemies = [Enemy(x=x*2) for x in range(16)]
+enemies = [Enemy(x=x*2) for x in range(12)]
 
 # PAUSE
 pause_handler = Entity(ignore_paused=True)
@@ -115,11 +112,13 @@ pause_handler.input = pause_handler_input   # Assign the input function to the p
 
 # TEXT
 Text('EARLY RELEASE!',color=color.yellow, origin=(4,2))
+# Lighting + shadows
+sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, player = player)
+ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 1.5)
 
-# SUN
-sun = DirectionalLight()
-sun.look_at(Vec3(1,-1,-1))
-Sky()
+render.setShaderAuto()
+# SKY
+Sky(texture = "assets/textures/sky")
 
 #EXIT
 def input(key):
