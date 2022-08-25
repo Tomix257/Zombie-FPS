@@ -19,6 +19,9 @@ pip install https://github.com/pokepetter/ursina/archive/master.zip
 
 The movement is WASD + SPACE to jump, you shoot with left click, you can pause with P button and exit game with ESCAPE button
 
+# Pictures
+![image](https://user-images.githubusercontent.com/79867246/186737259-8968556f-cf34-4a4d-b92d-65c2040a6d96.png)
+
 ## Status : 
 * Currently I think there are no bugs but there are things that need to be added 
 * There is no way to die as player 
