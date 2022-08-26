@@ -35,5 +35,11 @@ The movement is WASD + SPACE to jump, you shoot with left click, you can pause w
 * New Shadows 
 * Gameplay Changes 
 * New SkyBox
-* Fps optimization
+* Fps Optimization
+***
+## ***1.02***
+* Changed Crosshair
+* Map Changes
+* Changed few things in scripts just to make game feel better
+* Fps Optimization
 ***
