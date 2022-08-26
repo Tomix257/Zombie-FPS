@@ -1,10 +1,8 @@
 from ursina import *
-from ursina.prefabs.first_person_controller import FirstPersonController
 from sun import SunLight
-
+from movement import FirstPersonController
 
 # SETTINGS
-window.show_ursina_splash = True
 window.title = 'zombie game'
 app = Ursina()
 
@@ -13,33 +11,38 @@ window.exit_button.disable()
 window.cog_button.disable()
 
 # MAP
-ground = Entity(model='plane', collider='box', scale=128, texture='grass', texture_scale=(4,4))
+ground = Entity(model='plane', collider='box', scale=64, texture='grass', texture_scale=(4,4))
 
-wall_1=Entity(model="cube", collider="box", position=(-8, 0, 0), scale=(8, 5, 1), rotation=(0,0,0),
+wall_1=Entity(model="cube", collider="cube", position=(-9, 0, 0), scale=(8, 5, 1), rotation=(0,0,0),
     texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0))
 wall_2 = duplicate(wall_1, z=5)
-wall_3=duplicate(wall_1, z=10)
-wall_4=Entity(model="cube", collider="box", position=(-15, 0, 10), scale=(1,5,20), rotation=(0,0,0),
+wall_2=duplicate(wall_1, z=10)
+wall_2=duplicate(wall_1, z=15)
+wall_3=Entity(model="cube", collider="cube", position=(-15, 0, 10), scale=(1,5,20), rotation=(0,0,0),
+    texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0))
+
+
+wall_4=Entity(model="cube", collider="cube", position=(9, 0, 0), scale=(8, 5, 1), rotation=(0,0,0),
+    texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0))
+wall_5 = duplicate(wall_4, z=5)
+wall_5=duplicate(wall_4, z=10)
+wall_5=duplicate(wall_4, z=15)
+wall_6=Entity(model="cube", collider="cube", position=(15, 0, 10), scale=(1,5,20), rotation=(0,0,0),
+    texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0))
+
+wall_7=Entity(model="cube", collider="cube", position=(-5, 0, -20), scale=(20, 5, 1), rotation=(0,0,0),
     texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0))
 
 # PLAYER
-player = FirstPersonController(model='cube',collider="mesh", z=-10, color=color.light_gray, origin_y=-.5, speed=8)
+player = FirstPersonController(model='cube',collider="cube", z=-10, color=color.light_gray, origin_y=-.5, speed=8)
 player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
 
 # GUN
 gun = Entity(model='assets/models/Beretta.obj', parent=camera, position=Vec3(0.7,-1,1.5), scale=(0.2), origin_z=-5, on_cooldown=False)
-gun.muzzle_flash = Entity(parent=gun, z=15, world_scale=1,position=Vec3(0.7,2,9.9), model='quad', color=color.yellow, enabled=False)
+gun.muzzle_flash = Entity(parent=gun, z=15, world_scale=0.8,position=Vec3(0.7,2,9.9), model='quad', color=color.yellow, enabled=False)
 
 shootables_parent = Entity()
 mouse.traverse_target = shootables_parent
-
-for i in range(26):
-    Entity(model='cube', origin_y=-.15, scale=2, texture='brick', texture_scale=(1,2),
-        x=random.uniform(-8,8),
-        z=random.uniform(-8,8) + 18,
-        collider='box',
-        scale_y = random.uniform(2,3),
-        color=color.hsv(0, 0, random.uniform(.9, 1)))
 
 def update():
     if held_keys['left mouse']:
@@ -47,7 +50,6 @@ def update():
 
 def shoot():
     if not gun.on_cooldown:
-        # print('shoot')
         gun.on_cooldown = True
         gun.muzzle_flash.enabled=True
         from ursina.prefabs.ursfx import ursfx
@@ -97,7 +99,7 @@ class Enemy(Entity):
         self.health_bar.alpha = 1
 
 # Enemy()
-enemies = [Enemy(x=x*2) for x in range(12)]
+enemies = [Enemy(x=x*-0.5,z=x*-0.5) for x in range(10)]
 
 # PAUSE
 pause_handler = Entity(ignore_paused=True)
@@ -109,6 +111,7 @@ def pause_handler_input(key):
         pause_text.enabled = application.paused     # Also toggle "PAUSED" graphic.
 
 pause_handler.input = pause_handler_input   # Assign the input function to the pause handler.
+
 
 # TEXT
 Text('EARLY RELEASE!',color=color.yellow, origin=(4,2))
