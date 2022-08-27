@@ -5,6 +5,7 @@ class FirstPersonController(Entity):
     def __init__(self, **kwargs):
         self.cursor = Entity(parent=camera.ui, model='sphere', color=color.red, scale=.008, rotation_z=45)
         super().__init__()
+        self.on_cooldown = False
         self.speed = 5
         self.height = 2
         self.camera_pivot = Entity(parent=self, y=self.height)
@@ -121,9 +122,13 @@ class FirstPersonController(Entity):
         self.cursor.enabled = False
 
     def damage(self):
-        if self.health_bar_player.value == 0:
-            self.dead()
-        self.health_bar_player.value -= 1
+        if not self.on_cooldown:
+            self.on_cooldown = True
+            if self.health_bar_player.value == 0:
+                self.dead()
+            self.health_bar_player.value -= 10
+            invoke(setattr, self, 'on_cooldown', False, delay=1)
+            oof = Audio('assets\sounds\oof.mp3', loop = False)
 
     def dead(self):
         print('You Died!')
