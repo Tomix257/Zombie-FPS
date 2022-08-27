@@ -76,17 +76,15 @@ class Enemy(Entity):
         if dist > 40:
             return
 
-        if dist < 10:
-            damage()
-
         self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-
 
         self.look_at_2d(player.position, 'y')
         hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
         if hit_info.entity == player:
             if dist > 2:
                 self.position += self.forward * time.dt * 5
+            if dist < 1.5:
+                player.damage()
 
     @property
     def hp(self):
@@ -104,13 +102,7 @@ class Enemy(Entity):
 
 # Enemy()
 enemies = [Enemy(x=x*-0.5,z=x*-0.5) for x in range(10)]
-
-#Player Health Bar
-health_bar_player = HealthBar(bar_color=color.red, value=100)
-
-def damage():
-    health_bar_player.value -= 10
-
+    
 
 # PAUSE
 pause_handler = Entity(ignore_paused=True)

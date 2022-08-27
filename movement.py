@@ -1,4 +1,5 @@
 from ursina import *
+from ursina.prefabs.health_bar import HealthBar
 
 class FirstPersonController(Entity):
     def __init__(self, **kwargs):
@@ -22,6 +23,7 @@ class FirstPersonController(Entity):
         self.fall_after = .35 # will interrupt jump up
         self.jumping = False
         self.air_time = 0
+        self.health_bar_player = HealthBar(bar_color=color.red, value=100)
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -86,6 +88,8 @@ class FirstPersonController(Entity):
     def input(self, key):
         if key == 'space':
             self.jump()
+        if key == 'g':
+            self.damage()
 
 
     def jump(self):
@@ -115,3 +119,12 @@ class FirstPersonController(Entity):
     def on_disable(self):
         mouse.locked = False
         self.cursor.enabled = False
+
+    def damage(self):
+        if self.health_bar_player.value == 0:
+            self.dead()
+        self.health_bar_player.value -= 1
+
+    def dead(self):
+        print('You Died!')
+        exit()
