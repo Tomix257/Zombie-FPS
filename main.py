@@ -63,6 +63,7 @@ def shoot():
 # HEALTHBAR
 from ursina.prefabs.health_bar import HealthBar
 
+
 class Enemy(Entity):
     def __init__(self, **kwargs):
         super().__init__(parent=shootables_parent, model='cube', scale_y=2, origin_y=-.5, color=color.green, collider='box', **kwargs)
@@ -74,6 +75,9 @@ class Enemy(Entity):
         dist = distance_xz(player.position, self.position)
         if dist > 40:
             return
+
+        if dist < 10:
+            damage()
 
         self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
 
@@ -100,6 +104,13 @@ class Enemy(Entity):
 
 # Enemy()
 enemies = [Enemy(x=x*-0.5,z=x*-0.5) for x in range(10)]
+
+#Player Health Bar
+health_bar_player = HealthBar(bar_color=color.red, value=100)
+
+def damage():
+    health_bar_player.value -= 10
+
 
 # PAUSE
 pause_handler = Entity(ignore_paused=True)
