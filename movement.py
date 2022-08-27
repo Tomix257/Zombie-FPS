@@ -1,9 +1,11 @@
 from ursina import *
+from ursina.prefabs.health_bar import HealthBar
 
 class FirstPersonController(Entity):
     def __init__(self, **kwargs):
         self.cursor = Entity(parent=camera.ui, model='sphere', color=color.red, scale=.008, rotation_z=45)
         super().__init__()
+        self.on_cooldown = False
         self.speed = 5
         self.height = 2
         self.camera_pivot = Entity(parent=self, y=self.height)
@@ -22,6 +24,7 @@ class FirstPersonController(Entity):
         self.fall_after = .35 # will interrupt jump up
         self.jumping = False
         self.air_time = 0
+        self.health_bar_player = HealthBar(bar_color=color.red, value=100)
 
         for key, value in kwargs.items():
             setattr(self, key ,value)
@@ -86,6 +89,8 @@ class FirstPersonController(Entity):
     def input(self, key):
         if key == 'space':
             self.jump()
+        if key == 'g':
+            self.damage()
 
 
     def jump(self):
@@ -115,3 +120,16 @@ class FirstPersonController(Entity):
     def on_disable(self):
         mouse.locked = False
         self.cursor.enabled = False
+
+    def damage(self):
+        if not self.on_cooldown:
+            self.on_cooldown = True
+            if self.health_bar_player.value == 0:
+                self.dead()
+            self.health_bar_player.value -= 10
+            invoke(setattr, self, 'on_cooldown', False, delay=1)
+            oof = Audio('assets\sounds\oof.mp3', loop = False)
+
+    def dead(self):
+        print('You Died!')
+        exit()
