@@ -24,10 +24,9 @@ The movement is WASD + SPACE to jump, you shoot with left click, you can pause w
 
 ## Status : 
 * Currently I think there are no bugs but there are things that need to be added 
-* There is no way to die as player~~ ADDED
+* ~~There is no way to die as player~~ ADDED
 * There are no particles which I would like to implement in future
-
-* ~~Pistol model needs to get texture fixed~~ DONE
+* ~~Pistol model needs to get texture fixed~~ FIXED
 * ~~Maybe fix some performance~~ DONE
 
 # Changes/Patch Notes
