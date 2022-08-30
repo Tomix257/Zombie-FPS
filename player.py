@@ -27,6 +27,12 @@ class Player(Entity):
         self.air_time = 0
         self.health_bar_player = HealthBar(bar_color=color.lime, value=100, roundness = 0.5, y = window.bottom_left[1] + 0.1, scale_y = 0.03, scale_x = 0.4)
 
+        # Score
+        self.score = 0
+        self.score_text = Text(text = str(self.score), origin = (0, 0), size = 0.05, scale = (1, 1), position = window.top_left - (-0.1, 0.1))
+        self.score_text.text = str(self.score)
+
+
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
@@ -118,17 +124,21 @@ class Player(Entity):
         mouse.locked = False
         self.cursor.enabled = False
 
+    def shot_enemy(self):
+        self.score += 1
+        self.score_text.text = str(self.score)
 
     def damage(self):
         if not self.on_cooldown:
             self.on_cooldown = True
             if self.health_bar_player.value == 0:
-                self.dead()
+                self.respawn()
             self.health_bar_player.value -= 10
             invoke(setattr, self, 'on_cooldown', False, delay=1)
             oof = Audio('assets/sounds/oof.mp3', loop = False)
 
     
-    def dead(self):
-        self.position = self.start_position
-        self.health_bar_player.value += 100
+    def respawn(self):
+          print_on_screen('You Died!', origin = 0, scale = (2, 2))
+          self.position = self.start_position
+          self.health_bar_player.value += 100

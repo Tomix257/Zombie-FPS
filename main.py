@@ -1,6 +1,7 @@
 from ursina import *
 from sun import SunLight
 from player import Player
+from main_menu import MainMenu
 
 # SETTINGS
 window.title = 'zombie game'
@@ -29,11 +30,15 @@ wall_6=Entity(model="cube", collider="cube", position=(15, 0, 10), scale=(1,5,20
     texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0),ignore=True)
 wall_7=Entity(model="cube", collider="cube", position=(-5, 0, -20), scale=(20, 5, 1), rotation=(0,0,0),
     texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0),ignore=True)
+wall_8=Entity(model="cube", collider="cube", position=(5, 0, 20), scale=(20, 5, 1), rotation=(0,0,0),
+    texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0),ignore=True)
 
 # PLAYER
-player = Player(model='cube',collider="box", z=-1, color=color.light_gray, origin_y=-.5)
+player = Player(model='cube',collider="box", z=-18, color=color.light_gray)
 player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
 
+player.disable()
+main_menu = MainMenu(player)
 # GUN
 gun = Entity(model='assets/models/Beretta.obj', parent=camera, position=Vec3(0.7,-1,1.5), scale=(0.2), origin_z=-5, on_cooldown=False)
 gun.muzzle_flash = Entity(parent=gun, z=15, world_scale=0.8,position=Vec3(0.7,2,9.9), model='quad', color=color.yellow, enabled=False)
@@ -56,7 +61,7 @@ def shoot():
             mouse.hovered_entity.hp -= 10
             mouse.hovered_entity.blink(color.red)
 
-# HEALTHBAR
+# ENEMY
 from ursina.prefabs.health_bar import HealthBar
 
 class Enemy(Entity):
@@ -83,7 +88,6 @@ class Enemy(Entity):
 
     @property
 
-
     def hp(self):
         return self._hp
 
@@ -92,13 +96,14 @@ class Enemy(Entity):
         self._hp = value
         if value <= 0:
             destroy(self)
+            player.shot_enemy()
             return
 
         self.health_bar.world_scale_x = self.hp / self.max_hp * 1.5
         self.health_bar.alpha = 1
 
 # Enemy()
-enemies = [Enemy(x=random.randint(3,10),z=random.randint(3,10)) for x in range(10)]
+enemies = [Enemy(x=random.randint(-3,10),z=random.randint(-3,10)) for x in range(12)]
 
 # PAUSE
 pause_handler = Entity(ignore_paused=True)
@@ -112,18 +117,22 @@ def pause_handler_input(key):
 pause_handler.input = pause_handler_input   # Assign the input function to the pause handler.
 
 # TEXT
-Text('AMMO : INF/INF',color=color.white, origin=(-4, 18))
+
+Text('AMMO : INF/INF',color=color.white,position = window.bottom_right - (+0.3, -0.1))
 # Lighting + shadows
 sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, player = player)
 ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 1.5)
 
 render.setShaderAuto()
 # SKY
+
 Sky(texture = "assets/textures/sky")
 
-#EXIT
+# RESUME MENU
 def input(key):
-    if key == 'escape':
-        quit()
+    if main_menu.main_menu.enabled == False:
+        if key == "escape":
+            main_menu.pause_menu.enabled = not main_menu.pause_menu.enabled
+            mouse.locked = not mouse.locked  
 
 app.run()
