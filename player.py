@@ -131,14 +131,21 @@ class Player(Entity):
     def damage(self):
         if not self.on_cooldown:
             self.on_cooldown = True
-            if self.health_bar_player.value == 0:
+            if self.health_bar_player.value == 10:
+                invoke(setattr, self, 'on_cooldown', False, delay=1)
                 self.respawn()
-            self.health_bar_player.value -= 10
-            invoke(setattr, self, 'on_cooldown', False, delay=1)
-            oof = Audio('assets/sounds/oof.mp3', loop = False)
+            else:
+                self.health_bar_player.value -= 10
+                invoke(setattr, self, 'on_cooldown', False, delay=1)
+                oof = Audio('assets/sounds/oof.mp3', loop = False)
+
+            if self.health_bar_player.value < 20:
+                self.health_bar_player.bar_color = color.red
+
 
     
     def respawn(self):
           print_on_screen('You Died!', origin = 0, scale = (2, 2))
           self.position = self.start_position
-          self.health_bar_player.value += 100
+          self.health_bar_player.value = 100
+          self.health_bar_player.bar_color = color.lime
