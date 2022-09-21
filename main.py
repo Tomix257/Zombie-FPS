@@ -3,6 +3,7 @@ from sun import SunLight
 from player import Player
 from main_menu import MainMenu
 
+
 # SETTINGS
 window.title = 'zombie game'
 app = Ursina()
@@ -34,7 +35,7 @@ wall_8=Entity(model="cube", collider="cube", position=(5, 0, 20), scale=(20, 5, 
     texture="brick", texture_scale=(5,5), color=color.rgb(255, 128, 0),ignore=True)
 
 # PLAYER
-player = Player(model='cube',collider="box", z=-18, color=color.light_gray)
+player = Player(collider="box", z=-18, color=color.light_gray)
 player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
 
 player.disable()
@@ -116,14 +117,12 @@ def pause_handler_input(key):
 
 pause_handler.input = pause_handler_input   # Assign the input function to the pause handler.
 
-# TEXT
-
-Text('AMMO : INF/INF',color=color.white,position = window.bottom_right - (+0.3, -0.1))
 # Lighting + shadows
 sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, player = player)
 ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 1.5)
 
 render.setShaderAuto()
+
 # SKY
 
 Sky(texture = "assets/textures/sky")

@@ -26,6 +26,9 @@ class Player(Entity):
         self.jumping = False
         self.air_time = 0
         self.health_bar_player = HealthBar(bar_color=color.lime, value=100, roundness = 0.5, y = window.bottom_left[1] + 0.1, scale_y = 0.03, scale_x = 0.4)
+    
+        # Text
+        Text('AMMO : INF/INF',color=color.white,position = window.bottom_right - (+0.3, -0.1))
 
         # Score
         self.score = 0
@@ -131,14 +134,19 @@ class Player(Entity):
     def damage(self):
         if not self.on_cooldown:
             self.on_cooldown = True
-            if self.health_bar_player.value == 0:
+            if self.health_bar_player.value == 10:
+                invoke(setattr, self, 'on_cooldown', False, delay=1)
                 self.respawn()
-            self.health_bar_player.value -= 10
-            invoke(setattr, self, 'on_cooldown', False, delay=1)
-            oof = Audio('assets/sounds/oof.mp3', loop = False)
+            else:
+                self.health_bar_player.value -= 10
+                invoke(setattr, self, 'on_cooldown', False, delay=1)
+                oof = Audio('assets/sounds/oof.mp3', loop = False)
 
+            if self.health_bar_player.value < 40:
+                self.health_bar_player.bar_color = color.red
     
     def respawn(self):
           print_on_screen('You Died!', origin = 0, scale = (2, 2))
           self.position = self.start_position
-          self.health_bar_player.value += 100
+          self.health_bar_player.value = 100
+          self.health_bar_player.bar_color = color.lime

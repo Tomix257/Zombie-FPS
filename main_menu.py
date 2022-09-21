@@ -20,7 +20,8 @@ class MainMenu(Entity):
             self.main_menu.enable()
             self.pause_menu.disable()
 
-       
+         
+        title = Entity(model = "quad", scale = (0.5, 0.2, 0.2), texture = "ZO-logo", parent = self.main_menu, y = 0.3)
 
         start_button = Button(text = "S t a r t - G a m e", color = color.black, scale_y = 0.1, scale_x = 0.3, y = 0.02, parent = self.main_menu)
         settings_button = Button(text = "S e t t i n g s", color = color.black, scale_y = 0.1, scale_x = 0.3, y = -0.1, parent = self.main_menu)
