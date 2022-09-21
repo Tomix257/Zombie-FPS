@@ -42,3 +42,10 @@ The movement is WASD + SPACE to jump, you shoot with left click, you can pause w
 * Changed few things in scripts just to make game feel better
 * Fps Optimization
 ***
+## ***1.03***
+* Fixed all bugs
+* Healtbar works way better
+* Added new main menu
+***
+## ***THE END (PROBABLY)***
+
